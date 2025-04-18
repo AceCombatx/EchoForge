@@ -23,89 +23,6 @@ class EchoForge {
       currentFieldId: null,
       debugMode: false,
     }
-
-    // DOM elements
-    this.elements = {}
-    this.initElements()
-  }
-
-  initElements() {
-    // Theme toggle
-    this.elements.themeToggle = document.getElementById("theme-toggle")
-
-    // Webhook elements
-    this.elements.webhookInput = document.getElementById("webhook-url")
-    this.elements.webhookDropdownBtn = document.getElementById("webhook-dropdown-btn")
-    this.elements.addWebhookBtn = document.getElementById("add-webhook-btn")
-
-    // Message content elements
-    this.elements.messageContent = document.getElementById("message-content")
-    this.elements.contentChars = document.getElementById("content-chars")
-    this.elements.username = document.getElementById("username")
-    this.elements.avatarUrl = document.getElementById("avatar-url")
-
-    // Tab elements
-    this.elements.tabButtons = document.querySelectorAll(".tab-btn")
-    this.elements.tabContents = document.querySelectorAll(".tab-content")
-
-    // Embed elements
-    this.elements.addEmbedBtn = document.getElementById("add-embed-btn")
-    this.elements.addEmbedBtnAlt = document.getElementById("add-embed-btn-alt")
-    this.elements.embedsList = document.getElementById("embeds-list")
-
-    // Action buttons
-    this.elements.saveBtn = document.getElementById("save-btn")
-    this.elements.clearBtn = document.getElementById("clear-btn")
-    this.elements.exportBtn = document.getElementById("export-btn")
-    this.elements.jsonBtn = document.getElementById("json-btn")
-    this.elements.sendBtn = document.getElementById("send-btn")
-
-    // Debug mode
-    this.elements.debugModeToggle = document.getElementById("debug-mode")
-
-    // Message preview
-    this.elements.messagePreview = document.getElementById("message-preview")
-
-    // Support links
-    this.elements.supportServer = document.getElementById("support-server")
-    this.elements.discordBot = document.getElementById("discord-bot")
-    this.elements.settingsBtn = document.getElementById("settings-btn")
-
-    // Other buttons
-    this.elements.markdownBtn = document.getElementById("markdown-btn")
-    this.elements.emojiBtn = document.getElementById("emoji-btn")
-    this.elements.editMessageBtn = document.getElementById("edit-message-btn")
-  }
-
-  init() {
-  // Apply initial theme
-  this.applyTheme();
-
-  // Set initial values
-  if (this.elements.webhookInput) {
-    this.elements.webhookInput.value = this.state.currentWebhookUrl;
-  }
-
-  if (this.elements.messageContent) {
-    this.elements.messageContent.value = this.state.currentMessage.content;
-  }
-
-  if (this.elements.username) {
-    this.elements.username.value = this.state.currentMessage.username || "";
-  }
-
-  if (this.elements.avatarUrl) {
-    this.elements.avatarUrl.value = this.state.currentMessage.avatar_url || "";
-  }
-
-  // Update character count
-  if (this.elements.messageContent && this.elements.contentChars) {
-    this.updateCharCount(this.elements.messageContent, this.elements.contentChars);
-  }
-
-  // Init UI
-  this.renderMessagePreview();
-  this.renderEmbeds();
   this.setupEventListeners();
 
   // ✅ Hide loader after a short delay
@@ -201,23 +118,6 @@ class EchoForge {
 
     // Debug mode toggle
     if (this.elements.debugModeToggle) {
-      this.elements.debugModeToggle.addEventListener("change", (e) => {
-        this.state.debugMode = e.target.checked
-      })
-    }
-
-    // Add embed button
-    if (this.elements.addEmbedBtn) {
-      this.elements.addEmbedBtn.addEventListener("click", () => {
-        this.addEmbed()
-      })
-    }
-
-    // Add embed button (alternative)
-    if (this.elements.addEmbedBtnAlt) {
-      this.elements.addEmbedBtnAlt.addEventListener("click", () => {
-        this.addEmbed()
-      })
     }
 
     // Clear button
@@ -950,3 +850,5 @@ window.addEventListener("load", () => {
     setTimeout(() => loader.remove(), 500);
   }
 });
+
+
