@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EchoForge - Discord Webhook Creator</title>
+  <meta name="description" content="Create and customize Discord webhook messages with ease">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="loader-overlay">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">EchoForge is loading...</div>
+  </div>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-container">
+        <div class="logo">
+          <div class="logo-icon">E</div>
+          <span class="logo-text">EchoForge</span>
+        </div>
+        <nav class="main-nav">
+          <a href="#" class="nav-item" id="support-server">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+            <span>Support Server</span>
+          </a>
+          <a href="#" class="nav-item" id="discord-bot">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8Z"></path><path d="M16 4a2 2 0 0 1 2 2v5"></path><circle cx="5" cy="14" r="1"></circle><path d="M10.3 21.1a1.5 1.5 0 0 0 2.4-1.2v-4.7"></path><path d="M16 22a4 4 0 0 0 4-4v-3a2 2 0 0 0-2-2h-3a2 2 0 0 0-2 2v5.5"></path></svg>
+            <span>Discord Bot</span>
+          </a>
+          <a href="#" class="nav-item" id="settings-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            <span>Settings</span>
+          </a>
+          <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sun-icon"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="moon-icon"><path d="M12 3a6.364 6.364 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <div class="container">
+        <div class="editor-section">
+          <div class="section-header">
+            <h1 class="section-title">Discord Webhook Creator</h1>
+            <button class="edit-message-btn" id="edit-message-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              Edit Message
+            </button>
+          </div>
+
+          <div class="editor-card">
+            <div class="card-header">
+              <h2 class="card-title">Message Editor</h2>
+              <p class="card-description">Create and customize your Discord webhook messages</p>
+              <div class="action-buttons">
+                <button class="action-btn" id="save-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                  Save
+                </button>
+                <button class="action-btn" id="clear-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                  Clear All
+                </button>
+                <button class="action-btn" id="export-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                  Export
+                </button>
+              </div>
+            </div>
+
+            <div class="webhook-manager">
+              <label for="webhook-url" class="input-label">Webhook URL</label>
+              <div class="webhook-input-group">
+                <input type="text" id="webhook-url" class="webhook-input" placeholder="https://discord.com/api/webhooks/..." />
+                <button class="webhook-dropdown-btn" id="webhook-dropdown-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+                </button>
+              </div>
+              <button class="add-webhook-btn" id="add-webhook-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+                Add Webhook
+              </button>
+            </div>
+
+            <div class="editor-tabs">
+              <div class="tabs-header">
+                <button class="tab-btn active" data-tab="content">Content</button>
+                <button class="tab-btn" data-tab="embeds">Embeds</button>
+              </div>
+
+              <div class="tab-content" id="content-tab">
+                <div class="message-editor">
+                  <div class="input-group">
+                    <div class="input-header">
+                      <label for="message-content" class="input-label">Content</label>
+                      <div class="character-count">
+                        <span id="content-chars">0</span>/2000
+                      </div>
+                    </div>
+                    <div class="textarea-container">
+                      <textarea id="message-content" class="message-textarea" placeholder="Type your message content here..."></textarea>
+                      <div class="textarea-actions">
+                        <button class="emoji-btn" id="emoji-btn">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                        </button>
+                        <button class="markdown-btn" id="markdown-btn">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="username-settings">
+                    <div class="input-group half">
+                      <label for="username" class="input-label">Username Override</label>
+                      <input type="text" id="username" class="text-input" placeholder="Custom username (optional)" />
+                      <p class="input-help">Leave empty to use the webhook's default username</p>
+                    </div>
+                    <div class="input-group half">
+                      <label for="avatar-url" class="input-label">Avatar URL Override</label>
+                      <input type="text" id="avatar-url" class="text-input" placeholder="https://example.com/avatar.png" />
+                      <p class="input-help">Leave empty to use the webhook's default avatar</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-content hidden" id="embeds-tab">
+                <div class="embeds-container">
+                  <div class="embeds-header">
+                    <h3 class="embeds-title">Embeds</h3>
+                    <button class="add-embed-btn" id="add-embed-btn">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+                      Add Embed
+                    </button>
+                  </div>
+                  
+                  <div class="embeds-list" id="embeds-list">
+                    <!-- Embeds will be added here dynamically -->
+                    <div class="no-embeds-message">
+                      <p>No embeds added yet</p>
+                      <button class="add-embed-btn-alt" id="add-embed-btn-alt">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+                        Add Embed
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="editor-footer">
+              <div class="debug-mode">
+                <label class="switch">
+                  <input type="checkbox" id="debug-mode">
+                  <span class="slider round"></span>
+                </label>
+                <span class="debug-label">Debug Mode</span>
+              </div>
+              <button class="json-btn" id="json-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                JSON Editor
+              </button>
+              <button class="send-btn" id="send-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                Send Message
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="preview-section">
+          <div class="preview-card">
+            <div class="preview-header">
+              <h2 class="preview-title">Preview</h2>
+              <p class="preview-description">How your message will appear in Discord</p>
+            </div>
+            <div class="preview-content" id="message-preview">
+              <!-- Message preview will be dynamically generated here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Modals -->
+    <div class="modal" id="webhook-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Add Webhook</h2>
+          <button class="modal-close" id="webhook-modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-description">Save a webhook URL for quick access. Discord webhook URLs look like: https://discord.com/api/webhooks/123456789/abcdefg</p>
+          <div class="modal-form">
+            <div class="form-group">
+              <label for="webhook-name" class="input-label">Name</label>
+              <input type="text" id="webhook-name" class="text-input" placeholder="My Server" />
+            </div>
+            <div class="form-group">
+              <label for="webhook-url-input" class="input-label">URL</label>
+              <div class="webhook-test-group">
+                <input type="text" id="webhook-url-input" class="text-input" placeholder="https://discord.com/api/webhooks/..." />
+                <button class="test-webhook-btn" id="test-webhook-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5l10 -10"></path></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="cancel-btn" id="webhook-cancel-btn">Cancel</button>
+          <button class="save-btn" id="webhook-save-btn">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="embed-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Edit Embed</h2>
+          <button class="modal-close" id="embed-modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="embed-tabs">
+            <div class="embed-tabs-header">
+              <button class="embed-tab-btn active" data-tab="general">General</button>
+              <button class="embed-tab-btn" data-tab="author">Author</button>
+              <button class="embed-tab-btn" data-tab="images">Images</button>
+              <button class="embed-tab-btn" data-tab="footer">Footer</button>
+            </div>
+            
+            <div class="embed-tab-content active" id="general-tab">
+              <div class="embed-form">
+                <div class="form-row">
+                  <div class="form-group half">
+                    <label for="embed-title" class="input-label">Title</label>
+                    <input type="text" id="embed-title" class="text-input" placeholder="Embed title" maxlength="256" />
+                    <div class="char-counter"><span id="title-chars">0</span>/256</div>
+                  </div>
+                  <div class="form-group half">
+                    <label for="embed-color" class="input-label">Color</label>
+                    <div class="color-inputs">
+                      <input type="color" id="embed-color-picker" class="color-picker" value="#5865F2" />
+                      <input type="text" id="embed-color-text" class="text-input" value="#5865F2" placeholder="#5865F2" />
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="embed-description" class="input-label">Description</label>
+                  <textarea id="embed-description" class="text-area" placeholder="Embed description" maxlength="4096"></textarea>
+                  <div class="char-counter"><span id="description-chars">0</span>/4096</div>
+                </div>
+                
+                <div class="fields-section">
+                  <div class="fields-header">
+                    <label class="input-label">Fields</label>
+                    <button class="add-field-btn" id="add-field-btn">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+                      Add Field
+                    </button>
+                  </div>
+                  <div class="fields-list" id="fields-list">
+                    <!-- Fields will be added here dynamically -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="embed-tab-content" id="author-tab">
+              <div class="form-group">
+                <label for="author-name" class="input-label">Author Name</label>
+                <input type="text" id="author-name" class="text-input" placeholder="Author name" maxlength="256" />
+                <div class="char-counter"><span id="author-chars">0</span>/256</div>
+              </div>
+              <div class="form-group">
+                <label for="author-url" class="input-label">Author URL</label>
+                <input type="text" id="author-url" class="text-input" placeholder="https://example.com" />
+                <p class="input-help">The author name will be a clickable link</p>
+              </div>
+              <div class="form-group">
+                <label for="author-icon" class="input-label">Author Icon URL</label>
+                <input type="text" id="author-icon" class="text-input" placeholder="https://example.com/avatar.png" />
+                <p class="input-help">Small icon displayed next to author name</p>
+              </div>
+            </div>
+            
+            <div class="embed-tab-content" id="images-tab">
+              <div class="form-group">
+                <label for="embed-image" class="input-label">Image URL</label>
+                <input type="text" id="embed-image" class="text-input" placeholder="https://example.com/image.png" />
+                <p class="input-help">Large image displayed in the embed</p>
+              </div>
+              <div class="form-group">
+                <label for="embed-thumbnail" class="input-label">Thumbnail URL</label>
+                <input type="text" id="embed-thumbnail" class="text-input" placeholder="https://example.com/thumbnail.png" />
+                <p class="input-help">Small image displayed in the top right corner</p>
+              </div>
+            </div>
+            
+            <div class="embed-tab-content" id="footer-tab">
+              <div class="form-group">
+                <label for="footer-text" class="input-label">Footer Text</label>
+                <input type="text" id="footer-text" class="text-input" placeholder="Footer text" maxlength="2048" />
+                <div class="char-counter"><span id="footer-chars">0</span>/2048</div>
+              </div>
+              <div class="form-group">
+                <label for="footer-icon" class="input-label">Footer Icon URL</label>
+                <input type="text" id="footer-icon" class="text-input" placeholder="https://example.com/icon.png" />
+                <p class="input-help">Small icon displayed in the footer</p>
+              </div>
+              <div class="form-group">
+                <div class="timestamp-header">
+                  <label class="input-label">Timestamp</label>
+                  <button class="add-timestamp-btn" id="add-timestamp-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    Add Current Time
+                  </button>
+                </div>
+                <p class="input-help">Adds the current time to the footer. Discord will display this in the user's local timezone.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="delete-btn" id="delete-embed-btn">Delete Embed</button>
+          <div>
+            <button class="cancel-btn" id="embed-cancel-btn">Cancel</button>
+            <button class="save-btn" id="embed-save-btn">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="json-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">JSON Editor</h2>
+          <button class="modal-close" id="json-modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-description">View or edit the raw JSON for your webhook message</p>
+          <textarea id="json-content" class="json-editor" spellcheck="false"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button class="cancel-btn" id="json-cancel-btn">Cancel</button>
+          <button class="save-btn" id="json-copy-btn">Copy to Clipboard</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="markdown-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Markdown Guide</h2>
+          <button class="modal-close" id="markdown-modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-description">Discord supports these markdown formatting options</p>
+          <div class="markdown-guide">
+            <div class="markdown-row">
+              <code>**bold**</code>
+              <div class="md-preview bold">bold</div>
+            </div>
+            <div class="markdown-row">
+              <code>*italic*</code>
+              <div class="md-preview italic">italic</div>
+            </div>
+            <div class="markdown-row">
+              <code>__underline__</code>
+              <div class="md-preview underline">underline</div>
+            </div>
+            <div class="markdown-row">
+              <code>~~strikethrough~~</code>
+              <div class="md-preview line-through">strikethrough</div>
+            </div>
+            <div class="markdown-row">
+              <code>`code`</code>
+              <div class="md-preview"><code class="inline-code">code</code></div>
+            </div>
+            <div class="markdown-row">
+              <code>```code block```</code>
+              <div class="md-preview"><pre class="code-block">code block</pre></div>
+            </div>
+            <div class="markdown-row">
+              <code>&gt; quote</code>
+              <div class="md-preview quote">quote</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast-container" id="toast-container">
+      <!-- Toasts will be added here dynamically -->
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
