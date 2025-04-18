@@ -1,11 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const app = new EchoForge();
-  app.init();
-});
+  // Initialize the application
+  const app = new EchoForge()
+  app.init()
+})
 
 class EchoForge {
   constructor() {
     // State management
+    this.state = {
       theme: localStorage.getItem("theme") || "dark",
       currentWebhookUrl: localStorage.getItem("currentWebhookUrl") || "",
       webhooks: JSON.parse(localStorage.getItem("webhooks") || "[]"),
@@ -23,30 +25,93 @@ class EchoForge {
       debugMode: false,
     }
 
-  // ✅ Hide loader after a short delay
-  console.log("EchoForge initialized");
-  const loader = document.getElementById("loader-overlay");
-  if (loader) {
-    loader.style.opacity = "0";
-    loader.style.visibility = "hidden";
-    setTimeout(() => loader.remove(), 500);
+    // DOM elements
+    this.elements = {}
+    this.initElements()
   }
-}
 
+  initElements() {
+    // Theme toggle
+    this.elements.themeToggle = document.getElementById("theme-toggle")
+
+    // Webhook elements
+    this.elements.webhookInput = document.getElementById("webhook-url")
+    this.elements.webhookDropdownBtn = document.getElementById("webhook-dropdown-btn")
+    this.elements.addWebhookBtn = document.getElementById("add-webhook-btn")
+
+    // Message content elements
+    this.elements.messageContent = document.getElementById("message-content")
+    this.elements.contentChars = document.getElementById("content-chars")
+    this.elements.username = document.getElementById("username")
+    this.elements.avatarUrl = document.getElementById("avatar-url")
+
+    // Tab elements
+    this.elements.tabButtons = document.querySelectorAll(".tab-btn")
+    this.elements.tabContents = document.querySelectorAll(".tab-content")
+
+    // Embed elements
+    this.elements.addEmbedBtn = document.getElementById("add-embed-btn")
+    this.elements.addEmbedBtnAlt = document.getElementById("add-embed-btn-alt")
+    this.elements.embedsList = document.getElementById("embeds-list")
+
+    // Action buttons
+    this.elements.saveBtn = document.getElementById("save-btn")
+    this.elements.clearBtn = document.getElementById("clear-btn")
+    this.elements.exportBtn = document.getElementById("export-btn")
+    this.elements.jsonBtn = document.getElementById("json-btn")
+    this.elements.sendBtn = document.getElementById("send-btn")
+
+    // Debug mode
+    this.elements.debugModeToggle = document.getElementById("debug-mode")
+
+    // Message preview
+    this.elements.messagePreview = document.getElementById("message-preview")
+
+    // Support links
+    this.elements.supportServer = document.getElementById("support-server")
+    this.elements.discordBot = document.getElementById("discord-bot")
+    this.elements.settingsBtn = document.getElementById("settings-btn")
+
+    // Other buttons
+    this.elements.markdownBtn = document.getElementById("markdown-btn")
+    this.elements.emojiBtn = document.getElementById("emoji-btn")
+    this.elements.editMessageBtn = document.getElementById("edit-message-btn")
+  }
+
+  init() {
+    // Apply initial theme
+    this.applyTheme()
+
+    // Set initial values
+    if (this.elements.webhookInput) {
+      this.elements.webhookInput.value = this.state.currentWebhookUrl
     }
 
+    if (this.elements.messageContent) {
+      this.elements.messageContent.value = this.state.currentMessage.content
     }
 
+    if (this.elements.username) {
+      this.elements.username.value = this.state.currentMessage.username || ""
+    }
+
+    if (this.elements.avatarUrl) {
+      this.elements.avatarUrl.value = this.state.currentMessage.avatar_url || ""
     }
 
     // Update character counts
+    if (this.elements.messageContent && this.elements.contentChars) {
+      this.updateCharCount(this.elements.messageContent, this.elements.contentChars)
     }
 
     // Render message preview
+    this.renderMessagePreview()
 
     // Render embeds
+    this.renderEmbeds()
 
     // Setup event listeners
+    this.setupEventListeners()
   }
 
   setupEventListeners() {
@@ -58,75 +123,141 @@ class EchoForge {
     }
 
     // Tab switching
+    if (this.elements.tabButtons) {
+      this.elements.tabButtons.forEach((button) => {
         button.addEventListener("click", () => {
           const tabName = button.getAttribute("data-tab")
+          this.switchTab(tabName)
         })
       })
     }
 
     // Webhook input
+    if (this.elements.webhookInput) {
+      this.elements.webhookInput.addEventListener("input", (e) => {
+        this.state.currentWebhookUrl = e.target.value
         localStorage.setItem("currentWebhookUrl", this.state.currentWebhookUrl)
       })
     }
 
     // Message content input
+    if (this.elements.messageContent) {
+      this.elements.messageContent.addEventListener("input", (e) => {
+        this.state.currentMessage.content = e.target.value
+        this.updateCharCount(e.target, this.elements.contentChars)
+        this.saveCurrentMessage()
+        this.renderMessagePreview()
       })
     }
 
     // Username input
+    if (this.elements.username) {
+      this.elements.username.addEventListener("input", (e) => {
+        this.state.currentMessage.username = e.target.value
+        this.saveCurrentMessage()
+        this.renderMessagePreview()
       })
     }
 
     // Avatar URL input
+    if (this.elements.avatarUrl) {
+      this.elements.avatarUrl.addEventListener("input", (e) => {
+        this.state.currentMessage.avatar_url = e.target.value
+        this.saveCurrentMessage()
+        this.renderMessagePreview()
       })
     }
 
     // Debug mode toggle
+    if (this.elements.debugModeToggle) {
+      this.elements.debugModeToggle.addEventListener("change", (e) => {
+        this.state.debugMode = e.target.checked
+      })
+    }
+
+    // Add embed button
+    if (this.elements.addEmbedBtn) {
+      this.elements.addEmbedBtn.addEventListener("click", () => {
+        this.addEmbed()
+      })
+    }
+
+    // Add embed button (alternative)
+    if (this.elements.addEmbedBtnAlt) {
+      this.elements.addEmbedBtnAlt.addEventListener("click", () => {
+        this.addEmbed()
+      })
     }
 
     // Clear button
+    if (this.elements.clearBtn) {
+      this.elements.clearBtn.addEventListener("click", () => {
         if (confirm("Are you sure you want to clear all content? This cannot be undone.")) {
+          this.clearAll()
         }
       })
     }
 
     // Export button
+    if (this.elements.exportBtn) {
+      this.elements.exportBtn.addEventListener("click", () => {
+        this.exportJson()
       })
     }
 
     // JSON button
+    if (this.elements.jsonBtn) {
+      this.elements.jsonBtn.addEventListener("click", () => {
+        this.openJsonEditor()
       })
     }
 
     // Send button
+    if (this.elements.sendBtn) {
+      this.elements.sendBtn.addEventListener("click", () => {
+        this.sendMessage()
       })
     }
 
     // Add webhook button
+    if (this.elements.addWebhookBtn) {
+      this.elements.addWebhookBtn.addEventListener("click", () => {
+        this.showToast("Add Webhook", "Webhook management is coming soon!", "info")
       })
     }
 
     // Support server link
+    if (this.elements.supportServer) {
+      this.elements.supportServer.addEventListener("click", (e) => {
         e.preventDefault()
         window.open("https://discord.gg/echoforge", "_blank")
+        this.showToast("Support Server", "Opening the EchoForge support server...", "info")
       })
     }
 
     // Discord bot link
+    if (this.elements.discordBot) {
+      this.elements.discordBot.addEventListener("click", (e) => {
         e.preventDefault()
         window.open(
           "https://discord.com/api/oauth2/authorize?client_id=12345&permissions=2147483647&scope=bot",
           "_blank",
         )
+        this.showToast("Discord Bot", "Inviting the EchoForge bot to your server...", "info")
       })
     }
 
     // Settings button
+    if (this.elements.settingsBtn) {
+      this.elements.settingsBtn.addEventListener("click", (e) => {
         e.preventDefault()
+        this.showToast("Settings", "Settings panel is coming soon!", "info")
       })
     }
 
     // Markdown button
+    if (this.elements.markdownBtn) {
+      this.elements.markdownBtn.addEventListener("click", () => {
         document.getElementById("markdown-modal").classList.add("active")
       })
 
@@ -139,19 +270,29 @@ class EchoForge {
     }
 
     // Emoji button
+    if (this.elements.emojiBtn) {
+      this.elements.emojiBtn.addEventListener("click", () => {
+        this.showToast("Emoji Picker", "Emoji picker is coming soon!", "info")
       })
     }
 
     // Edit message button
+    if (this.elements.editMessageBtn) {
+      this.elements.editMessageBtn.addEventListener("click", () => {
+        this.showToast("Edit Message", "Message editing feature is coming soon!", "info")
       })
     }
 
     // Save button
+    if (this.elements.saveBtn) {
+      this.elements.saveBtn.addEventListener("click", () => {
+        this.showToast("Save Message", "Message saving is coming soon!", "info")
       })
     }
   }
 
   applyTheme() {
+    if (this.state.theme === "dark") {
       document.body.classList.add("dark-theme")
     } else {
       document.body.classList.remove("dark-theme")
@@ -159,10 +300,13 @@ class EchoForge {
   }
 
   toggleTheme() {
+    this.state.theme = this.state.theme === "dark" ? "light" : "dark"
     localStorage.setItem("theme", this.state.theme)
+    this.applyTheme()
   }
 
   switchTab(tabName) {
+    this.elements.tabButtons.forEach((button) => {
       if (button.getAttribute("data-tab") === tabName) {
         button.classList.add("active")
       } else {
@@ -170,6 +314,7 @@ class EchoForge {
       }
     })
 
+    this.elements.tabContents.forEach((content) => {
       if (content.id === `${tabName}-tab`) {
         content.classList.remove("hidden")
       } else {
@@ -307,6 +452,7 @@ class EchoForge {
       </div>
     `
 
+    this.elements.messagePreview.innerHTML = previewHTML
   }
 
   formatTimestamp(date) {
@@ -387,13 +533,21 @@ class EchoForge {
     }
 
     if (!this.state.currentMessage.embeds) {
+      this.state.currentMessage.embeds = []
     }
 
+    this.state.currentMessage.embeds.push(newEmbed)
+    this.saveCurrentMessage()
+    this.renderEmbeds()
+    this.renderMessagePreview()
 
     // Switch to embeds tab
+    if (this.elements.tabButtons) {
+      this.switchTab("embeds")
     }
 
     // Show toast
+    this.showToast("Embed Added", "New embed has been added to your message", "success")
   }
 
   renderEmbeds() {
@@ -402,6 +556,7 @@ class EchoForge {
     const { embeds } = this.state.currentMessage
 
     if (!embeds || embeds.length === 0) {
+      this.elements.embedsList.innerHTML = `
         <div class="no-embeds-message">
           <p>No embeds added yet</p>
           <button class="add-embed-btn-alt" id="add-embed-btn-alt">
@@ -415,6 +570,7 @@ class EchoForge {
       const addEmbedBtnAlt = document.getElementById("add-embed-btn-alt")
       if (addEmbedBtnAlt) {
         addEmbedBtnAlt.addEventListener("click", () => {
+          this.addEmbed()
         })
       }
 
@@ -442,11 +598,13 @@ class EchoForge {
       `
     })
 
+    this.elements.embedsList.innerHTML = embedsHTML
 
     // Attach event listeners to the new buttons
     document.querySelectorAll(".edit-embed").forEach((button) => {
       button.addEventListener("click", (e) => {
         const embedId = e.currentTarget.getAttribute("data-id")
+        this.showToast("Edit Embed", "Embed editing is coming soon!", "info")
       })
     })
 
@@ -454,6 +612,7 @@ class EchoForge {
       button.addEventListener("click", (e) => {
         e.stopPropagation()
         const embedId = e.currentTarget.getAttribute("data-id")
+        this.deleteEmbed(embedId)
       })
     })
   }
@@ -464,27 +623,45 @@ class EchoForge {
     if (embedIndex === -1) return
 
     if (confirm("Are you sure you want to delete this embed?")) {
+      this.state.currentMessage.embeds.splice(embedIndex, 1)
+      this.saveCurrentMessage()
+      this.renderEmbeds()
+      this.renderMessagePreview()
 
       // Show toast
+      this.showToast("Embed Deleted", "Embed has been removed from your message", "success")
     }
   }
 
   clearAll() {
+    this.state.currentMessage = {
       content: "",
       username: "",
       avatar_url: "",
       embeds: [],
     }
 
+    if (this.elements.messageContent) {
+      this.elements.messageContent.value = ""
     }
 
+    if (this.elements.username) {
+      this.elements.username.value = ""
     }
 
+    if (this.elements.avatarUrl) {
+      this.elements.avatarUrl.value = ""
     }
 
+    if (this.elements.messageContent && this.elements.contentChars) {
+      this.updateCharCount(this.elements.messageContent, this.elements.contentChars)
     }
 
+    this.saveCurrentMessage()
+    this.renderEmbeds()
+    this.renderMessagePreview()
 
+    this.showToast("Cleared", "All content has been cleared", "success")
   }
 
   exportJson() {
@@ -501,29 +678,37 @@ class EchoForge {
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
 
+    this.showToast("Exported", "Message exported as JSON file", "success")
   }
 
   openJsonEditor() {
+    this.showToast("JSON Editor", "JSON editor is coming soon!", "info")
   }
 
   sendMessage() {
     const { currentMessage, currentWebhookUrl, debugMode } = this.state
 
     if (!currentWebhookUrl) {
+      this.showToast("Error", "Please enter a webhook URL", "error")
       return
     }
 
     if (!this.validateWebhookUrl(currentWebhookUrl)) {
+      this.showToast("Invalid Webhook URL", "Please enter a valid Discord webhook URL", "error")
       return
     }
 
     if (!currentMessage.content && (!currentMessage.embeds || currentMessage.embeds.length === 0)) {
+      this.showToast("Empty Message", "Your message must contain either text content or at least one embed", "error")
       return
     }
 
     // Show sending toast
+    this.showToast("Sending...", "Sending your message to Discord", "info")
 
     if (debugMode) {
+      this.exportJson()
+      this.showToast("Debug Mode", "Payload prepared but not sent. Review the JSON and send manually.", "info")
       return
     }
 
@@ -550,9 +735,11 @@ class EchoForge {
           })
         }
 
+        this.showToast("Success", "Message sent successfully!", "success")
         return true
       })
       .catch((error) => {
+        this.showToast("Error sending webhook", error.message || "Unknown error occurred", "error")
         return false
       })
   }
@@ -722,14 +909,3 @@ class EchoForge {
     }, 5000)
   }
 }
-
-window.addEventListener("load", () => {
-  const loader = document.getElementById("loader-overlay");
-  if (loader) {
-    console.log("Failsafe loader removal triggered");
-    loader.style.opacity = "0";
-    loader.style.visibility = "hidden";
-    setTimeout(() => loader.remove(), 500);
-  }
-});
-
