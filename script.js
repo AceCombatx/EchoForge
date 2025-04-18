@@ -950,13 +950,3 @@ window.addEventListener("load", () => {
     setTimeout(() => loader.remove(), 500);
   }
 });
-
-
-window.addEventListener("load", () => {
-  const loader = document.getElementById("loader-overlay");
-  if (loader) {
-    loader.style.opacity = "0";
-    loader.style.visibility = "hidden";
-    setTimeout(() => loader.remove(), 500);
-  }
-});
